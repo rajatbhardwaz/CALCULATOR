@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Unique Calculator</title>
+  <style>
+    /* Reset and basic styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    /* Calculator container with glassmorphism effect */
+    .calculator {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 20px;
+      width: 320px;
+    }
+    /* Display style */
+    .display {
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 10px;
+      padding: 20px;
+      font-size: 2em;
+      text-align: right;
+      color: #fff;
+      margin-bottom: 20px;
+      min-height: 60px;
+      word-wrap: break-word;
+    }
+    /* Grid layout for buttons */
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 15px;
+    }
+    /* Button styling */
+    button {
+      background: rgba(255, 255, 255, 0.3);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1.5em;
+      padding: 20px;
+      transition: background 0.3s;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    button:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+    /* Special styles for operator buttons */
+    button.operator {
+      background: rgba(255, 255, 255, 0.4);
+    }
+    /* Special style for the clear button */
+    button.clear {
+      background: rgba(255, 102, 102, 0.5);
+    }
+    /* Special style for the equal button (spans 2 columns) */
+    button.equal {
+      grid-column: span 2;
+      background: rgba(102, 255, 102, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="display" id="display">0</div>
+    <div class="buttons">
+      <!-- First row -->
+      <button class="clear" id="clear">C</button>
+      <button class="operator" id="divide">÷</button>
+      <button class="operator" id="multiply">×</button>
+      <button class="operator" id="backspace">⌫</button>
+      <!-- Second row -->
+      <button class="number" id="7">7</button>
+      <button class="number" id="8">8</button>
+      <button class="number" id="9">9</button>
+      <button class="operator" id="subtract">−</button>
+      <!-- Third row -->
+      <button class="number" id="4">4</button>
+      <button class="number" id="5">5</button>
+      <button class="number" id="6">6</button>
+      <button class="operator" id="add">+</button>
+      <!-- Fourth row -->
+      <button class="number" id="1">1</button>
+      <button class="number" id="2">2</button>
+      <button class="number" id="3">3</button>
+      <button class="equal" id="equal">=</button>
+      <!-- Fifth row -->
+      <button class="number" id="0">0</button>
+      <button class="number" id="decimal">.</button>
+    </div>
+  </div>
+
+  <script>
+    // Reference to the display element
+    const display = document.getElementById('display');
+    let currentValue = '';
+
+    // Mapping for button IDs to values
+    const buttonValues = {
+      '0': '0',
+      '1': '1',
+      '2': '2',
+      '3': '3',
+      '4': '4',
+      '5': '5',
+      '6': '6',
+      '7': '7',
+      '8': '8',
+      '9': '9',
+      'decimal': '.',
+      'add': '+',
+      'subtract': '-',
+      'multiply': '*',
+      'divide': '/',
+    };
+
+    // Add event listeners to number and operator buttons
+    document.querySelectorAll('button.number, button.operator').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const id = e.target.id;
+        if (buttonValues[id] !== undefined) {
+          currentValue += buttonValues[id];
+          updateDisplay(currentValue);
+        }
+      });
+    });
+
+    // Equal button: evaluate the expression
+    document.getElementById('equal').addEventListener('click', () => {
+      try {
+        // Evaluate using JavaScript's eval (Note: In production, consider safer alternatives)
+        let result = eval(currentValue);
+        updateDisplay(result);
+        currentValue = result.toString();
+      } catch (error) {
+        updateDisplay("Error");
+        currentValue = '';
+      }
+    });
+
+    // Clear button: reset the display and current value
+    document.getElementById('clear').addEventListener('click', () => {
+      currentValue = '';
+      updateDisplay('0');
+    });
+
+    // Backspace button: remove the last character
+    document.getElementById('backspace').addEventListener('click', () => {
+      currentValue = currentValue.slice(0, -1);
+      updateDisplay(currentValue || '0');
+    });
+
+    // Update the display content
+    function updateDisplay(value) {
+      display.textContent = value;
+    }
+  </script>
+</body>
+</html>
